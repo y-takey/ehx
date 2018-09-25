@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node src/index.js"
   },
   "repository": {
     "type": "git",
@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/y-takey/ehx/issues"
   },
-  "homepage": "https://github.com/y-takey/ehx#readme"
+  "homepage": "https://github.com/y-takey/ehx#readme",
+  "dependencies": {
+    "puppeteer": "^1.8.0"
+  }
 }
