@@ -2,6 +2,9 @@ const fs = require("fs");
 // const mkdirp = require("mkdirp");
 const puppeteer = require("puppeteer");
 
+const PagenationSelector = ".gtb .ptt a";
+const ThumbnailSelector = ".gdtm a";
+
 const target = process.argv[2];
 const outDir = `${process.cwd()}/tmp`;
 
@@ -25,13 +28,11 @@ const saveFile = async (filename, content) => {
 };
 
 // aタグのNodeList
-const getHrefs = async (page, query) => {
-  const temp1 = await page.evaluate(selector => {
+const getHrefs = async (page, query) =>
+  await page.evaluate(selector => {
     const links = document.querySelectorAll(selector);
     return [...links].map(link => link.href);
   }, query);
-  return temp1;
-};
 
 const uniq = ary => Array.from(new Set(ary));
 
@@ -59,39 +60,38 @@ puppeteer.launch().then(async browser => {
   // });
 
   console.log("title:", title);
-  const temp1 = await getHrefs(page, ".gtb .ptt a");
-  const indexPages = uniq(temp1);
+  const pagenations = uniq(await getHrefs(page, PagenationSelector));
 
   const urls = [];
-  for (const indexPage of indexPages) {
+  for (const indexPage of pagenations) {
     if (indexPage !== target) {
-      await page.goto(indexPage, { waitUntil: "networkidle2" });
+      await page.goto(indexPage, { waitUntil: "networkidle0" });
     }
 
-    const partialUrls = await getHrefs(page, ".gdtm a");
-    urls.push(...partialUrls);
+    urls.push(...(await getHrefs(page, ThumbnailSelector)));
   }
 
   console.log("all urls:", urls.length);
 
   page.on("response", async response => {
-    const url = response.url();
-    const matches = /\d{3}\.jpg$/.exec(url);
+    const matches = /\d{3}\.jpg$/.exec(response.url());
 
     if (!matches) return;
 
-    console.log("image:", matches[0]);
+    // console.log("image:", matches[0]);
     const buffer = await response.buffer();
     saveFile(matches[0], buffer);
   });
 
   // テスト用に最初の数件だけ
-  const targetUrls = urls.slice(0, 5);
-  for (const url of targetUrls) {
+  // const targetUrls = urls.slice(0, 3);
+  const targetUrls = urls;
+  for (let i = 0; i < targetUrls.length; i++) {
+    console.log(`[${i + 1}/${targetUrls.length}]`);
     // `{ waitUntil: "networkidle0" }` だと画像の保存が完了する前に終了することがあるため、
     // 完全にアイドル状態になるまで待機する。もしそれでも取りこぼしが発生する場合は、
     // "domcontentloaded" や "load" を試してみる。
-    await page.goto(url, { waitUntil: "networkidle0" });
+    await page.goto(targetUrls[i], { waitUntil: "networkidle0" });
   }
 
   browser.close();
