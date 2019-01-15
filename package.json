@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node src/index.js"
+    "start": "node src/index.js",
+    "catalog": "node src/catalog.js",
+    "download": "node src/download.js"
   },
   "repository": {
     "type": "git",
@@ -17,6 +19,7 @@
   },
   "homepage": "https://github.com/y-takey/ehx#readme",
   "dependencies": {
+    "json-stringify-pretty-compact": "^1.2.0",
     "puppeteer": "^1.8.0"
   }
 }
