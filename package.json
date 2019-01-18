@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node src/index.js",
     "catalog": "node src/catalog.js",
+    "dl": "node src/download.js",
     "download": "node src/download.js"
   },
   "repository": {
