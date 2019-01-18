@@ -33,7 +33,7 @@ puppeteer.launch().then(async browser => {
       // `{ waitUntil: "networkidle0" }` だと画像の保存が完了する前に終了することがあるため、
       // 完全にアイドル状態になるまで待機する。もしそれでも取りこぼしが発生する場合は、
       // "domcontentloaded" や "load" を試してみる。
-      await page.goto(url, { timeout: 10000, waitUntil: "networkidle0" });
+      await page.goto(url, { timeout: 20000, waitUntil: "networkidle0" });
       await sleep(1000);
       targets[i].done = true;
     } catch (err) {
