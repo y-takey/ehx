@@ -19,7 +19,8 @@ const uniq = ary => Array.from(new Set(ary));
 puppeteer.launch().then(async browser => {
   console.log("---- [1] Start cataloging ---------------");
   const page = await browser.newPage();
-  await page.goto(targetUrl, { waitUntil: "networkidle2" });
+  // query strong that avoid content warning
+  await page.goto(`${targetUrl}?nw=always`, { waitUntil: "networkidle2" });
 
   const title = await page.evaluate(() => document.title.trim());
   // const title = await page.evaluate(() => document.getElementById("gj").innerText.trim());
