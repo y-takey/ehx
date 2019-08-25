@@ -14,13 +14,18 @@ puppeteer.launch().then(async browser => {
   // page.setViewport({ width: 1280, height: 926 });
 
   page.on("response", async response => {
-    // const matches = /\d{3}\.jpg$/.exec(response.url());
-    const matches = /.+\/(.+?\.jpg)$/.exec(response.url());
+    let matches = /.+\/([^\/]{2,}\.(jpg|png))$/.exec(response.url());
 
-    if (!matches) return;
+    if (!matches) {
+      matches = /.+\/(\d{1,}\.(jpg|png))$/.exec(response.url());
+      if (!matches) return;
+    }
+    const filename = matches[1];
+    // Black list
+    if (filename.includes("logo") || filename.includes("banner")) return;
 
     const buffer = await response.buffer();
-    saveFile(key, matches[1], buffer);
+    saveFile(key, filename, buffer);
   });
 
   const targets = data.pages;
