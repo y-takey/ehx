@@ -39,7 +39,7 @@ puppeteer.launch().then(async browser => {
   }
 
   const data = urls.map((url, i) => ({ page: i + 1, url, done: false }));
-  const jsonPath = writeJSON(key, { title, pages: data });
+  const jsonPath = writeJSON(key, { title, size: data.length, pages: data });
 
   browser.close();
   console.log("[OUT] ", jsonPath);
