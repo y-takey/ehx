@@ -20,7 +20,9 @@
   },
   "homepage": "https://github.com/y-takey/ehx#readme",
   "dependencies": {
-    "json-stringify-pretty-compact": "^1.2.0",
-    "puppeteer": "^1.8.0"
+    "chalk": "^2.4.2",
+    "json-stringify-pretty-compact": "^2.0.0",
+    "progress": "^2.0.3",
+    "puppeteer": "^1.19.0"
   }
 }
