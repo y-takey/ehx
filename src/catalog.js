@@ -14,6 +14,19 @@ const getHrefs = async (page, query) =>
     return [...links].map(link => link.href);
   }, query);
 
+const getPagenations = async (page, query) =>
+  await page.evaluate(selector => {
+    const basePath = document.location.href;
+    const result = [basePath];
+    const links = document.querySelectorAll(selector);
+    const pages = [...links].map(link => Number(link.innerText)).filter(num => !Number.isNaN(num));
+    const lastPage = Number(pages[pages.length - 1]);
+    if (lastPage !== 1) {
+      [...Array(lastPage - 1)].forEach((_, i) => result.push(`${basePath}?p=${i + 1}`));
+    }
+    return result;
+  }, query);
+
 const uniq = ary => Array.from(new Set(ary));
 
 puppeteer.launch().then(async browser => {
@@ -27,7 +40,7 @@ puppeteer.launch().then(async browser => {
 
   console.log("[Title] ", title);
 
-  const pagenations = uniq(await getHrefs(page, PagenationSelector));
+  const pagenations = uniq(await getPagenations(page, PagenationSelector));
 
   const urls = [];
   for (const indexPage of pagenations) {
