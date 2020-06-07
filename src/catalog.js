@@ -9,17 +9,17 @@ const [, , key, targetUrl] = process.argv;
 
 // aタグのNodeList
 const getHrefs = async (page, query) =>
-  await page.evaluate(selector => {
+  await page.evaluate((selector) => {
     const links = document.querySelectorAll(selector);
-    return [...links].map(link => link.href);
+    return [...links].map((link) => link.href);
   }, query);
 
 const getPagenations = async (page, query) =>
-  await page.evaluate(selector => {
+  await page.evaluate((selector) => {
     const basePath = document.location.href;
     const result = [basePath];
     const links = document.querySelectorAll(selector);
-    const pages = [...links].map(link => Number(link.innerText)).filter(num => !Number.isNaN(num));
+    const pages = [...links].map((link) => Number(link.innerText)).filter((num) => !Number.isNaN(num));
     const lastPage = Number(pages[pages.length - 1]);
     if (lastPage !== 1) {
       [...Array(lastPage - 1)].forEach((_, i) => result.push(`${basePath}?p=${i + 1}`));
@@ -27,9 +27,9 @@ const getPagenations = async (page, query) =>
     return result;
   }, query);
 
-const uniq = ary => Array.from(new Set(ary));
+const uniq = (ary) => Array.from(new Set(ary));
 
-puppeteer.launch().then(async browser => {
+puppeteer.launch().then(async (browser) => {
   console.log("---- [1] Start cataloging ---------------");
   const page = await browser.newPage();
   // query strong that avoid content warning

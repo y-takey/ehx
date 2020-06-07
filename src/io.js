@@ -7,13 +7,13 @@ const baseDir = `${process.cwd()}/tmp`;
 
 let existsImageDir = false;
 
-const createDir = dirPath => {
+const createDir = (dirPath) => {
   if (!fs.existsSync(dirPath)) {
     fs.mkdirSync(dirPath);
   }
 };
 
-const readJSON = key => {
+const readJSON = (key) => {
   const data = fs.readFileSync(`${baseDir}/${key}/${catlogFileName}`);
   return JSON.parse(data);
 };
@@ -34,7 +34,7 @@ const saveFile = async (key, filename, content) => {
     existsImageDir = true;
   }
   const filePath = `${dirPath}/${filename}`;
-  fs.writeFile(filePath, content, err => {
+  fs.writeFile(filePath, content, (err) => {
     if (err) {
       console.log("XXXXXX failed to save file XXXXXX");
       console.log(err);
