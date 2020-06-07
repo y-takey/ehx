@@ -1,4 +1,5 @@
 const puppeteer = require("puppeteer");
+const chalk = require("chalk");
 
 const { existJSON, writeJSON } = require("./io.js");
 
@@ -16,18 +17,23 @@ const getHrefs = async (page, query) =>
     return [...links].map((link) => link.href);
   }, query);
 
-const getPagenations = async (page, query) =>
-  await page.evaluate((selector) => {
-    const basePath = document.location.href;
-    const result = [basePath];
-    const links = document.querySelectorAll(selector);
-    const pages = [...links].map((link) => Number(link.innerText)).filter((num) => !Number.isNaN(num));
-    const lastPage = Number(pages[pages.length - 1]);
-    if (lastPage !== 1) {
-      [...Array(lastPage - 1)].forEach((_, i) => result.push(`${basePath}?p=${i + 1}`));
-    }
-    return result;
-  }, query);
+const getPagenations = async (page, query) => {
+  try {
+    return await page.evaluate((selector) => {
+      const basePath = document.location.href;
+      const result = [basePath];
+      const links = document.querySelectorAll(selector);
+      const pages = [...links].map((link) => Number(link.innerText)).filter((num) => !Number.isNaN(num));
+      const lastPage = Number(pages[pages.length - 1]);
+      if (lastPage !== 1) {
+        [...Array(lastPage - 1)].forEach((_, i) => result.push(`${basePath}?p=${i + 1}`));
+      }
+      return result;
+    }, query);
+  } catch (err) {
+    return [];
+  }
+};
 
 const uniq = (ary) => Array.from(new Set(ary));
 
@@ -53,10 +59,15 @@ puppeteer.launch().then(async (browser) => {
     urls.push(...uniq(await getHrefs(page, ThumbnailSelector)));
   }
 
+  browser.close();
+  if (!urls.length) {
+    console.error(chalk.red("Can't get urls!"));
+    process.exit(1);
+  }
+
   const data = urls.map((url, i) => ({ page: i + 1, url, done: false }));
   const jsonPath = writeJSON(key, { title, size: data.length, pages: data });
 
-  browser.close();
   console.log("[OUT] ", jsonPath);
   console.log("---- [1] End ---------------");
 });
