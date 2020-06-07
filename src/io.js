@@ -13,6 +13,15 @@ const createDir = (dirPath) => {
   }
 };
 
+const existJSON = (key) => {
+  try {
+    fs.statSync(`${baseDir}/${key}/${catlogFileName}`);
+    return true;
+  } catch (err) {
+    return false;
+  }
+};
+
 const readJSON = (key) => {
   const data = fs.readFileSync(`${baseDir}/${key}/${catlogFileName}`);
   return JSON.parse(data);
@@ -43,4 +52,4 @@ const saveFile = async (key, filename, content) => {
   });
 };
 
-module.exports = { readJSON, writeJSON, saveFile };
+module.exports = { existJSON, readJSON, writeJSON, saveFile };

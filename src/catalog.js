@@ -1,11 +1,13 @@
 const puppeteer = require("puppeteer");
 
-const { writeJSON } = require("./io.js");
+const { existJSON, writeJSON } = require("./io.js");
 
 const PagenationSelector = ".gtb .ptt a";
 const ThumbnailSelector = ".gdtm a";
 
 const [, , key, targetUrl] = process.argv;
+
+if (existJSON(key)) process.exit(0);
 
 // aタグのNodeList
 const getHrefs = async (page, query) =>
