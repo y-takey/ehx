@@ -41,7 +41,16 @@ puppeteer.launch().then(async (browser) => {
   console.log("---- [1] Start cataloging ---------------");
   const page = await browser.newPage();
   // query strong that avoid content warning
-  await page.goto(`${targetUrl}?nw=always`, { waitUntil: "networkidle2" });
+  try {
+    // await page.goto(`${targetUrl}?nw=always`, { waitUntil: "networkidle2" });
+    await page.goto(`${targetUrl}?nw=always`);
+    await page.waitForFunction(() => {
+      return window.document.readyState === "interactive" || window.document.readyState === "complete";
+    });
+  } catch (err) {
+    console.error(chalk.red("Can't get index page!"));
+    process.exit(1);
+  }
 
   const title = await page.evaluate(() => document.title.trim());
   // const title = await page.evaluate(() => document.getElementById("gj").innerText.trim());
@@ -53,7 +62,16 @@ puppeteer.launch().then(async (browser) => {
   const urls = [];
   for (const indexPage of pagenations) {
     if (indexPage !== targetUrl) {
-      await page.goto(indexPage, { waitUntil: "networkidle0" });
+      // await page.goto(indexPage, { waitUntil: "networkidle0" });
+      try {
+        await page.goto(indexPage);
+        await page.waitForFunction(() => {
+          return window.document.readyState === "interactive" || window.document.readyState === "complete";
+        });
+      } catch (err) {
+        console.error(chalk.red("Can't get index page! 2"));
+        process.exit(1);
+      }
     }
 
     urls.push(...uniq(await getHrefs(page, ThumbnailSelector)));
