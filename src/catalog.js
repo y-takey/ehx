@@ -43,10 +43,7 @@ puppeteer.launch().then(async (browser) => {
   // query strong that avoid content warning
   try {
     // await page.goto(`${targetUrl}?nw=always`, { waitUntil: "networkidle2" });
-    await page.goto(`${targetUrl}?nw=always`);
-    await page.waitForFunction(() => {
-      return window.document.readyState === "interactive" || window.document.readyState === "complete";
-    });
+    await page.goto(`${targetUrl}?nw=always`, { waitUntil: "domcontentloaded" });
   } catch (err) {
     console.error(chalk.red("Can't get index page!"));
     process.exit(1);
@@ -64,10 +61,7 @@ puppeteer.launch().then(async (browser) => {
     if (indexPage !== targetUrl) {
       // await page.goto(indexPage, { waitUntil: "networkidle0" });
       try {
-        await page.goto(indexPage);
-        await page.waitForFunction(() => {
-          return window.document.readyState === "interactive" || window.document.readyState === "complete";
-        });
+        await page.goto(indexPage, { waitUntil: "domcontentloaded" });
       } catch (err) {
         console.error(chalk.red("Can't get index page! 2"));
         process.exit(1);
