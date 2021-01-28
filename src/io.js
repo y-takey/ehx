@@ -52,4 +52,4 @@ const saveFile = async (key, filename, content) => {
   });
 };
 
-module.exports = { existJSON, readJSON, writeJSON, saveFile };
+module.exports = { existJSON, readJSON, writeJSON, saveFile, createDir };

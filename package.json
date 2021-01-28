@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node src/index.js",
     "catalog": "node src/catalog.js",
+    "crop": "node src/crop.js",
     "dl": "node src/download.js",
     "download": "node src/download.js"
   },
@@ -23,6 +24,7 @@
     "chalk": "^4.0.0",
     "json-stringify-pretty-compact": "^2.0.0",
     "progress": "^2.0.3",
-    "puppeteer": "^3.3.0"
+    "puppeteer": "^3.3.0",
+    "sharp": "^0.26.0"
   }
 }
