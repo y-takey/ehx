@@ -6,16 +6,17 @@ const { readJSON, writeJSON, saveFile } = require("./io.js");
 
 const [, , key] = process.argv;
 
-const sleep = msec => new Promise(resolve => setTimeout(resolve, msec));
+const sleep = (msec) => new Promise((resolve) => setTimeout(resolve, msec));
 
 const data = readJSON(key);
 
-puppeteer.launch().then(async browser => {
+puppeteer.launch().then(async (browser) => {
   // console.log("---- [2] Start Downloading ---------------");
+  let num = 0;
   const page = await browser.newPage();
   // page.setViewport({ width: 1280, height: 926 });
 
-  page.on("response", async response => {
+  page.on("response", async (response) => {
     let matches = /.+\/([^\/]{2,}\.(jpg|png))$/.exec(response.url());
 
     if (!matches) {
@@ -24,10 +25,16 @@ puppeteer.launch().then(async browser => {
     }
     const filename = matches[1];
     // Black list
-    if (filename.includes("logo") || filename.includes("banner")) return;
+    if (
+      filename.includes("logo") ||
+      filename.includes("banner") ||
+      filename.includes("button") ||
+      filename.includes("overlay")
+    )
+      return;
 
     const buffer = await response.buffer();
-    saveFile(key, filename, buffer);
+    saveFile(key, `${++num}_${filename}`, buffer);
   });
 
   const targets = data.pages;
