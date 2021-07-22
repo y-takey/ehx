@@ -34,7 +34,7 @@ puppeteer.launch().then(async (browser) => {
       return;
 
     const buffer = await response.buffer();
-    saveFile(key, `${++num}_${filename}`, buffer);
+    saveFile(key, `${num}_${filename}`, buffer);
   });
 
   const targets = data.pages;
@@ -49,6 +49,7 @@ puppeteer.launch().then(async (browser) => {
     // console.log(`[${i + 1}/${targets.length}]${done ? " (Skip)" : ""}`);
     if (!done) {
       try {
+        num = i + 1;
         // `{ waitUntil: "networkidle0" }` だと画像の保存が完了する前に終了することがあるため、
         // 完全にアイドル状態になるまで待機する。もしそれでも取りこぼしが発生する場合は、
         // "domcontentloaded" や "load" を試してみる。
