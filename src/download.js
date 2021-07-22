@@ -10,6 +10,30 @@ const sleep = (msec) => new Promise((resolve) => setTimeout(resolve, msec));
 
 const data = readJSON(key);
 
+const blackList = [
+  "logo",
+  "banner",
+  "button",
+  "overlay",
+  "leaderboard",
+  "ad1499342-1",
+  "ad791295-1",
+  "ad835",
+  "12957-1",
+  "1396-1",
+  "15054-1",
+  "153-1",
+  "15490-1",
+  "17385-1",
+  "33590-1",
+  "37523-",
+  "38516-",
+  "42209-",
+  "42581-1",
+  "7663-1",
+  "40000-1",
+];
+
 puppeteer.launch().then(async (browser) => {
   // console.log("---- [2] Start Downloading ---------------");
   let num = 0;
@@ -25,13 +49,7 @@ puppeteer.launch().then(async (browser) => {
     }
     const filename = matches[1];
     // Black list
-    if (
-      filename.includes("logo") ||
-      filename.includes("banner") ||
-      filename.includes("button") ||
-      filename.includes("overlay")
-    )
-      return;
+    if (blackList.some((name) => filename.includes(name))) return;
 
     const buffer = await response.buffer();
     saveFile(key, `${num}_${filename}`, buffer);
