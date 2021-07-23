@@ -2,7 +2,7 @@ const fs = require("fs");
 const path = require("path");
 const sharp = require("sharp");
 
-const { createDir } = require("./io.js");
+import { createDir } from "./io";
 
 const [, , targetDir] = process.argv;
 

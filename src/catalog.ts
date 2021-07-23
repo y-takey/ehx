@@ -1,7 +1,7 @@
-const puppeteer = require("puppeteer");
-const chalk = require("chalk");
+import puppeteer from "puppeteer";
+import chalk from "chalk";
 
-const { existJSON, writeJSON } = require("./io.js");
+import { existJSON, writeJSON } from "./io";
 
 const PagenationSelector = ".gtb .ptt a";
 const ThumbnailSelector = ".gdtm a";
@@ -35,7 +35,7 @@ const getPagenations = async (page, query) => {
   }
 };
 
-const uniq = (ary) => Array.from(new Set(ary));
+const uniq = (ary: string[]) => Array.from(new Set(ary));
 
 puppeteer.launch().then(async (browser) => {
   console.log("---- [1] Start cataloging ---------------");

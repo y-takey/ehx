@@ -4,11 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node src/index.js",
-    "catalog": "node src/catalog.js",
-    "crop": "node src/crop.js",
-    "dl": "node src/download.js",
-    "download": "node src/download.js"
+    "start": "ts-node src/index.ts",
+    "catalog": "ts-node src/catalog.ts",
+    "crop": "ts-node src/crop.ts",
+    "dl": "ts-node src/download.ts",
+    "download": "ts-node src/download.ts"
   },
   "repository": {
     "type": "git",
@@ -25,6 +25,8 @@
     "json-stringify-pretty-compact": "^3.0.0",
     "progress": "^2.0.3",
     "puppeteer": "^10.1.0",
-    "sharp": "^0.28.3"
+    "sharp": "^0.28.3",
+    "ts-node": "^10.1.0",
+    "typescript": "^4.3.5"
   }
 }

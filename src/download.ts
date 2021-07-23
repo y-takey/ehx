@@ -2,7 +2,7 @@ const puppeteer = require("puppeteer");
 const ProgressBar = require("progress");
 const chalk = require("chalk");
 
-const { readJSON, writeJSON, saveFile } = require("./io.js");
+import { readJSON, writeJSON, saveFile } from "./io";
 
 const [, , key] = process.argv;
 
