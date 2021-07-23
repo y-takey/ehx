@@ -1,6 +1,8 @@
 import fs from "fs";
 import jsonStringify from "json-stringify-pretty-compact";
 
+import { DataJson } from "./interface"
+
 const catlogFileName = "data.json";
 
 const baseDir = `${process.cwd()}/tmp`;
@@ -22,12 +24,12 @@ export const existJSON = (key) => {
   }
 };
 
-export const readJSON = (key) => {
+export const readJSON = (key: string): DataJson => {
   const data = fs.readFileSync(`${baseDir}/${key}/${catlogFileName}`, "utf8");
   return JSON.parse(data);
 };
 
-export const writeJSON = (key, json) => {
+export const writeJSON = (key: string, json: DataJson) => {
   const dirPath = `${baseDir}/${key}`;
   createDir(dirPath);
   const filePath = `${dirPath}/${catlogFileName}`;

@@ -2,6 +2,7 @@ import puppeteer, { WaitForOptions } from "puppeteer";
 import chalk from "chalk";
 
 import { existJSON, writeJSON } from "./io";
+import { PageRecord } from "./interface"
 
 const PagenationSelector = ".gtb .ptt a";
 const ThumbnailSelector = ".gdtm a";
@@ -11,11 +12,19 @@ const [, , key, targetUrl] = process.argv;
 
 if (existJSON(key)) process.exit(0);
 
+interface Refs {
+  url: string;
+  filename: string;
+}
+
 // aタグのNodeList
-const getHrefs = async (page, query) =>
+const getHrefs = async (page, query): Promise<Refs[]> =>
   await page.evaluate((selector) => {
     const links = document.querySelectorAll(selector);
-    return [...links].map((link) => link.href);
+    return [...links].map((link) => {
+      const [, filename] = link.querySelector("img").title.split(": ")
+      return { url: link.href, filename  }
+    });
   }, query);
 
 const getPagenations = async (page, query) => {
@@ -59,7 +68,7 @@ const uniq = (ary: string[]) => Array.from(new Set(ary));
         await page.goto(indexPage, gotoOptions);
       }
   
-      urls.push(...uniq(await getHrefs(page, ThumbnailSelector)));
+      urls.push(...(await getHrefs(page, ThumbnailSelector)));
     }
 
     browser.close();
@@ -68,8 +77,8 @@ const uniq = (ary: string[]) => Array.from(new Set(ary));
       process.exit(1);
     }
   
-    const data = urls.map((url, i) => ({ page: i + 1, url, done: false }));
-    const jsonPath = writeJSON(key, { title, size: data.length, pages: data });
+    const pages: PageRecord[] = urls.map((url, i) => ({ page: i + 1, ...url, done: false }));
+    const jsonPath = writeJSON(key, { title, size: pages.length, pages: pages });
   
     console.log("[OUT] ", jsonPath);
   } catch (err) {
