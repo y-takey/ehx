@@ -1,6 +1,6 @@
-const fs = require("fs");
-const path = require("path");
-const sharp = require("sharp");
+import fs from "fs";
+import path from "path";
+import sharp from "sharp";
 
 import { createDir } from "./io";
 

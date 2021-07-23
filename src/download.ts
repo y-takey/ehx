@@ -1,6 +1,6 @@
-const puppeteer = require("puppeteer");
-const ProgressBar = require("progress");
-const chalk = require("chalk");
+import puppeteer from "puppeteer";
+import ProgressBar from "progress";
+import chalk from "chalk";
 
 import { readJSON, writeJSON, saveFile } from "./io";
 

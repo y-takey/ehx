@@ -1,5 +1,5 @@
-const fs = require("fs");
-const jsonStringify = require("json-stringify-pretty-compact");
+import fs from "fs";
+import jsonStringify from "json-stringify-pretty-compact";
 
 const catlogFileName = "data.json";
 
@@ -23,7 +23,7 @@ export const existJSON = (key) => {
 };
 
 export const readJSON = (key) => {
-  const data = fs.readFileSync(`${baseDir}/${key}/${catlogFileName}`);
+  const data = fs.readFileSync(`${baseDir}/${key}/${catlogFileName}`, "utf8");
   return JSON.parse(data);
 };
 
