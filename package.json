@@ -25,6 +25,6 @@
     "json-stringify-pretty-compact": "^2.0.0",
     "progress": "^2.0.3",
     "puppeteer": "^3.3.0",
-    "sharp": "^0.26.0"
+    "sharp": "^0.28.3"
   }
 }
