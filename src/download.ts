@@ -24,29 +24,24 @@ const data = readJSON(key);
   });
 
   for (const record of targets) {
-    const { page: num, filename, url, done } = record;
-    if (!done) {
+    if (!record.done) {
       try {
         const responseListener = async (response) => {
-          const matches = /.+\/([^\/]{1,}\.(jpg|png))$/.exec(response.url());
-      
-          if (!matches) return;
-
-          if (filename !== matches[1]) return;
+          if (!response.url().match(`/${record.filename}`)) return;
 
           const buffer = await response.buffer();
-          saveFile(key, `${num.toString().padStart(3, "0")}_${filename}`, buffer);
+          saveFile(key, `${record.page.toString().padStart(3, "0")}_${record.filename}`, buffer);
         };
         page.on("response", responseListener)
       
         // `{ waitUntil: "networkidle0" }` だと画像の保存が完了する前に終了することがあるため、
         // 完全にアイドル状態になるまで待機する。もしそれでも取りこぼしが発生する場合は、
         // "domcontentloaded" や "load" を試してみる。
-        const response = await page.goto(url, { timeout: 20000, waitUntil: "networkidle0" });
+        const response = await page.goto(record.url, { timeout: 20000, waitUntil: "networkidle0" });
         page.off("response", responseListener)
 
         if (response.status() === 200) {
-          targets[num - 1].done = true;
+          record.done = true;
         }
         await sleep(1000);
       } catch (err) {
