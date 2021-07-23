@@ -34,8 +34,9 @@ const blackList = [
   "40000-1",
 ];
 
-puppeteer.launch().then(async (browser) => {
+(async () => {
   // console.log("---- [2] Start Downloading ---------------");
+  const browser = await puppeteer.launch()
   let num = 0;
   const page = await browser.newPage();
   // page.setViewport({ width: 1280, height: 926 });
@@ -64,7 +65,6 @@ puppeteer.launch().then(async (browser) => {
 
   for (let i = 0; i < targets.length; i++) {
     const { url, done } = targets[i];
-    // console.log(`[${i + 1}/${targets.length}]${done ? " (Skip)" : ""}`);
     if (!done) {
       try {
         num = i + 1;
@@ -78,8 +78,6 @@ puppeteer.launch().then(async (browser) => {
         await sleep(1000);
       } catch (err) {
         // 当該のページのダウンロードはスキップし、次のページのダウンロードを継続する。
-        // console.log(err.name + ': ' + err.message);
-        // process.exit(-1);
       }
     }
     bar.tick();
@@ -97,4 +95,4 @@ puppeteer.launch().then(async (browser) => {
   } else {
     console.log(chalk.green("---- End (All pages completed!) -----"));
   }
-});
+})();
