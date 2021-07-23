@@ -2,7 +2,7 @@ import puppeteer from "puppeteer";
 import ProgressBar from "progress";
 import chalk from "chalk";
 
-import { readJSON, writeJSON, saveFile } from "./io";
+import { readJSON, writeJSON, saveFile, getImageNum } from "./io";
 
 const [, , key] = process.argv;
 
@@ -60,7 +60,12 @@ const data = readJSON(key);
     failures.forEach(({ page, url }) => {
       console.log(`${page}: ${url}`);
     });
-  } else {
+    return
+  }
+
+  if (getImageNum(key) === data.size) {
     console.log(chalk.green("---- End (All pages completed!) -----"));
+  } else {
+    console.log(chalk.red("---- End (some pages failed!) -----"));
   }
 })();

@@ -53,3 +53,9 @@ export const saveFile = async (key, filename, content) => {
     }
   });
 };
+
+export const getImageNum = (key): number => {
+  const dirPath = `${baseDir}/${key}/images/`;
+  const ret = fs.readdirSync(dirPath)
+  return ret.length
+};
