@@ -27,10 +27,15 @@ const data = readJSON(key);
     if (!record.done) {
       try {
         const responseListener = async (response) => {
-          if (!response.url().match(`/${record.filename}`)) return;
+          const matches = /.+\/([^\/]{1,}\.(jpg|png))$/.exec(response.url());
+          if (!matches) return;
+          const filename = matches[1];
+
+          // タイトルと実際の拡張子が異なる場合があるため、拡張子は無視する
+          if (filename.replace(/\.(jpg|png)$/, "") !== record.filename.replace(/\.(jpg|png)$/, "")) return;
 
           const buffer = await response.buffer();
-          saveFile(key, `${record.page.toString().padStart(3, "0")}_${record.filename}`, buffer);
+          await saveFile(key, `${record.page.toString().padStart(3, "0")}_${filename}`, buffer);
         };
         page.on("response", responseListener)
       
@@ -38,12 +43,12 @@ const data = readJSON(key);
         // 完全にアイドル状態になるまで待機する。もしそれでも取りこぼしが発生する場合は、
         // "domcontentloaded" や "load" を試してみる。
         const response = await page.goto(record.url, { timeout: 20000, waitUntil: "networkidle0" });
+        await sleep(1000);
         page.off("response", responseListener)
 
         if (response.status() === 200) {
           record.done = true;
         }
-        await sleep(1000);
       } catch (err) {
         // 当該のページのダウンロードはスキップし、次のページのダウンロードを継続する。
       }
