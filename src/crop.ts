@@ -1,8 +1,8 @@
-const fs = require("fs");
-const path = require("path");
-const sharp = require("sharp");
+import fs from "fs";
+import path from "path";
+import sharp from "sharp";
 
-const { createDir } = require("./io.js");
+import { createDir } from "./io";
 
 const [, , targetDir] = process.argv;
 
@@ -20,8 +20,8 @@ const cropImage = async (filename) => {
   const leftWidth = metadata.width - rightWidth;
   const extractOPtions = { top: 0, height: metadata.height };
 
-  await image.extract({ ...extractOPtions, left: leftWidth, width: rightWidth }).toFile(`${outputPath}.a.${extension}`);
-  await image.extract({ ...extractOPtions, left: 0, width: leftWidth }).toFile(`${outputPath}.b.${extension}`);
+  await image.extract({ ...extractOPtions, left: leftWidth, width: rightWidth }).toFile(`${outputPath}.1.${extension}`);
+  await image.extract({ ...extractOPtions, left: 0, width: leftWidth }).toFile(`${outputPath}.2.${extension}`);
 };
 
 const main = async () => {

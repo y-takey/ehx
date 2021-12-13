@@ -1,5 +1,7 @@
-const fs = require("fs");
-const jsonStringify = require("json-stringify-pretty-compact");
+import fs from "fs";
+import jsonStringify from "json-stringify-pretty-compact";
+
+import { DataJson } from "./interface"
 
 const catlogFileName = "data.json";
 
@@ -7,13 +9,13 @@ const baseDir = `${process.cwd()}/tmp`;
 
 let existsImageDir = false;
 
-const createDir = (dirPath) => {
+export const createDir = (dirPath) => {
   if (!fs.existsSync(dirPath)) {
     fs.mkdirSync(dirPath);
   }
 };
 
-const existJSON = (key) => {
+export const existJSON = (key) => {
   try {
     fs.statSync(`${baseDir}/${key}/${catlogFileName}`);
     return true;
@@ -22,12 +24,12 @@ const existJSON = (key) => {
   }
 };
 
-const readJSON = (key) => {
-  const data = fs.readFileSync(`${baseDir}/${key}/${catlogFileName}`);
+export const readJSON = (key: string): DataJson => {
+  const data = fs.readFileSync(`${baseDir}/${key}/${catlogFileName}`, "utf8");
   return JSON.parse(data);
 };
 
-const writeJSON = (key, json) => {
+export const writeJSON = (key: string, json: DataJson) => {
   const dirPath = `${baseDir}/${key}`;
   createDir(dirPath);
   const filePath = `${dirPath}/${catlogFileName}`;
@@ -36,7 +38,7 @@ const writeJSON = (key, json) => {
   return filePath;
 };
 
-const saveFile = async (key, filename, content) => {
+export const saveFile = async (key, filename, content) => {
   const dirPath = `${baseDir}/${key}/images/`;
   if (!existsImageDir) {
     createDir(dirPath);
@@ -52,4 +54,8 @@ const saveFile = async (key, filename, content) => {
   });
 };
 
-module.exports = { existJSON, readJSON, writeJSON, saveFile, createDir };
+export const getImageNum = (key): number => {
+  const dirPath = `${baseDir}/${key}/images/`;
+  const ret = fs.readdirSync(dirPath)
+  return ret.length
+};
