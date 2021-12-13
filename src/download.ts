@@ -27,15 +27,18 @@ const data = readJSON(key);
     if (!record.done) {
       try {
         const responseListener = async (response) => {
-          const matches = /.+\/([^\/]{1,}\.(jpg|png))$/.exec(response.url());
-          if (!matches) return;
-          const filename = matches[1];
+          try {
+            const matches = /.+\/([^\/]{1,}\.(jpg|png))$/.exec(response.url());
+            if (!matches) return;
+            const filename = matches[1];
 
-          // タイトルと実際の拡張子が異なる場合があるため、拡張子は無視する
-          if (filename.replace(/\.(jpg|png)$/, "") !== record.filename.replace(/\.(jpg|png)$/, "")) return;
+            // タイトルと実際の拡張子が異なる場合があるため、拡張子は無視する
+            if (filename.replace(/\.(jpg|png)$/, "") !== record.filename.replace(/\.(jpg|png)$/, "")) return;
 
-          const buffer = await response.buffer();
-          await saveFile(key, `${record.page.toString().padStart(3, "0")}_${filename}`, buffer);
+            const buffer = await response.buffer();
+            await saveFile(key, `${record.page.toString().padStart(3, "0")}_${filename}`, buffer);
+              
+          } catch (e) {}
         };
         page.on("response", responseListener)
       
