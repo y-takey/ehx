@@ -1,14 +1,30 @@
 import puppeteer, { WaitForOptions } from "puppeteer";
 import chalk from "chalk";
+import yargs from 'yargs/yargs'
 
 import { existJSON, writeJSON } from "./io";
 import { PageRecord } from "./interface"
 
+const argv = yargs(process.argv.slice(2)).options({ p: { type: "string", default: "" } }).parseSync()
+const [key, targetUrl] = argv._ as string[];
+const targetPages = argv.p ? {} : null;
+
+if (argv.p) {
+  argv.p.split(",").forEach(str => {
+    const [startNum, endNum] = str.split("-").map(Number)
+    if (endNum) {
+      [...Array(endNum - startNum + 1)].forEach((_, i) => {
+        targetPages[startNum + i] = true
+      })
+    } else {
+      targetPages[startNum] = true
+    }
+  })  
+}
+
 const PagenationSelector = ".gtb .ptt a";
 const ThumbnailSelector = ".gdtm a";
 const gotoOptions: WaitForOptions = { waitUntil: "domcontentloaded" }
-
-const [, , key, targetUrl] = process.argv;
 
 if (existJSON(key)) process.exit(0);
 
@@ -48,8 +64,6 @@ const getPagenations = async (page, query) => {
 const uniq = (ary: string[]) => Array.from(new Set(ary));
 
 (async () => {
-  console.log("---- [1] Start cataloging ---------------");
-
   const browser = await puppeteer.launch()
   const page = await browser.newPage();
 
@@ -77,7 +91,8 @@ const uniq = (ary: string[]) => Array.from(new Set(ary));
       process.exit(1);
     }
   
-    const pages: PageRecord[] = urls.map((url, i) => ({ page: i + 1, ...url, done: false }));
+    const tempPages: PageRecord[] = urls.map((url, i) => ({ page: i + 1, ...url, done: false }));
+    const pages = targetPages ? tempPages.filter((rec) => targetPages[rec.page] ) : tempPages
     const jsonPath = writeJSON(key, { title, size: pages.length, pages: pages });
   
     console.log("[OUT] ", jsonPath);
@@ -85,6 +100,4 @@ const uniq = (ary: string[]) => Array.from(new Set(ary));
     console.error(chalk.red("Can't catalog index page!"));
     process.exit(1);
   }
-
-  console.log("---- [1] End ---------------");
 })();
