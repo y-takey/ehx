@@ -1,5 +1,7 @@
 import fs from "fs";
+import path from "path";
 import jsonStringify from "json-stringify-pretty-compact";
+import sharp from "sharp";
 
 import { DataJson } from "./interface"
 
@@ -38,8 +40,12 @@ export const writeJSON = (key: string, json: DataJson) => {
   return filePath;
 };
 
+export const imageDirPath = (key): string => {
+  return `${baseDir}/${key}/images/`;
+};
+
 export const saveFile = async (key, filename, content) => {
-  const dirPath = `${baseDir}/${key}/images/`;
+  const dirPath = imageDirPath(key);
   if (!existsImageDir) {
     createDir(dirPath);
     existsImageDir = true;
@@ -55,7 +61,40 @@ export const saveFile = async (key, filename, content) => {
 };
 
 export const getImageNum = (key): number => {
-  const dirPath = `${baseDir}/${key}/images/`;
+  const dirPath = imageDirPath(key);
   const ret = fs.readdirSync(dirPath)
   return ret.length
 };
+
+export const cropImage = async (filePath) => {
+  const extension = filePath.split(".").pop();
+
+  const image = sharp(filePath);
+  const { width, height } = await image.metadata();
+  const regularWidth = height * 0.8
+  if (regularWidth > width) return;
+
+  const extractOPtions = { top: 0, height: height };
+  const removeFile = () => {
+    fs.unlink(filePath, () => {})
+  }
+
+  if (height * 1.2 < width) {
+    const halfWidth = Math.floor(width / 2)
+    const cropWidth = Math.min(halfWidth, regularWidth)
+  
+    await image.extract({ ...extractOPtions, left: halfWidth, width: cropWidth }).toFile(`${filePath}.1.${extension}`);
+    await image.extract({ ...extractOPtions, left: halfWidth - cropWidth, width: cropWidth }).toFile(`${filePath}.2.${extension}`).then(removeFile);
+  } else {
+    const left = Math.floor((width - regularWidth) / 2)
+    await image.extract({ ...extractOPtions, left, width: regularWidth }).toFile(`${filePath}.1.${extension}`).then(removeFile);
+  }
+};
+
+export const getImagePaths = (dir: string) => {
+  const filenames = fs.readdirSync(dir).
+    filter(filename => filename.match(/\.(jpg|jpeg|png)$/)).sort().
+    map(filename => path.join(dir, filename));
+
+  return filenames
+}
