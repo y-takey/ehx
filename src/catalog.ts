@@ -5,9 +5,13 @@ import yargs from 'yargs/yargs'
 import { existJSON, writeJSON } from "./io";
 import { PageRecord } from "./interface"
 
-const argv = yargs(process.argv.slice(2)).options({ p: { type: "string", default: "" } }).parseSync()
+const argv = yargs(process.argv.slice(2)).
+  options({ p: { type: "string", default: "" } }).
+  options({ s: { type: "string", default: "" } }).
+  parseSync()
 const [key, targetUrl] = argv._ as string[];
-const targetPages = argv.p ? {} : null;
+const isFiltered = argv.p || argv.s
+const targetPages = {};
 
 if (argv.p) {
   argv.p.split(",").forEach(str => {
@@ -20,6 +24,13 @@ if (argv.p) {
       targetPages[startNum] = true
     }
   })  
+}
+
+if (argv.s) {
+  const [step, endNum] = argv.s.split("-").map(Number)
+  for (let num = 1; num <= endNum; num = num + step) {
+    targetPages[num] = true
+  }
 }
 
 const PagenationSelector = ".gtb .ptt a";
@@ -92,7 +103,7 @@ const uniq = (ary: string[]) => Array.from(new Set(ary));
     }
   
     const tempPages: PageRecord[] = urls.map((url, i) => ({ page: i + 1, ...url, done: false }));
-    const pages = targetPages ? tempPages.filter((rec) => targetPages[rec.page] ) : tempPages
+    const pages = isFiltered ? tempPages.filter((rec) => targetPages[rec.page] ) : tempPages
     const jsonPath = writeJSON(key, { title, size: pages.length, pages: pages });
   
     console.log("[OUT] ", jsonPath);
