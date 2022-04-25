@@ -6,6 +6,7 @@
   "scripts": {
     "start": "ts-node src/index.ts",
     "catalog": "ts-node src/catalog.ts",
+    "fin": "ts-node src/finish.ts",
     "crop": "ts-node src/crop.ts",
     "dl": "ts-node src/download.ts",
     "download": "ts-node src/download.ts"
