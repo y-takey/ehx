@@ -71,7 +71,7 @@ export const cropImage = async (filePath) => {
 
   const image = sharp(filePath);
   const { width, height } = await image.metadata();
-  const regularWidth = height * 0.8
+  const regularWidth = Math.floor(height * 0.8)
   if (regularWidth > width) return;
 
   const extractOPtions = { top: 0, height: height };
