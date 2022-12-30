@@ -1,5 +1,5 @@
 import puppeteer, { WaitForOptions } from "puppeteer";
-import chalk from "chalk";
+import pc from "picocolors";
 import yargs from 'yargs/yargs'
 
 import { existJSON, writeJSON } from "./io";
@@ -98,7 +98,7 @@ const uniq = (ary: string[]) => Array.from(new Set(ary));
 
     browser.close();
     if (!urls.length) {
-      console.error(chalk.red("Can't get urls!"));
+      console.error(pc.red("Can't get urls!"));
       process.exit(1);
     }
   
@@ -108,7 +108,7 @@ const uniq = (ary: string[]) => Array.from(new Set(ary));
   
     console.log("[OUT] ", jsonPath);
   } catch (err) {
-    console.error(chalk.red("Can't catalog index page!"));
+    console.error(pc.red("Can't catalog index page!"));
     process.exit(1);
   }
 })();

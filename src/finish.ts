@@ -2,7 +2,7 @@ import fs from "fs";
 import path from "path";
 import sharp from "sharp";
 import yargs from 'yargs/yargs'
-import chalk from "chalk";
+import pc from "picocolors";
 
 import { imageDirPath, getImagePaths, cropImage } from "./io";
 
@@ -36,7 +36,7 @@ const main = async () => {
   await crop()
   await rename()
 
-  console.log(chalk.green(`---- [${key}] Completed -----`));
+  console.log(pc.green(`---- [${key}] Completed -----`));
 };
 
 main();

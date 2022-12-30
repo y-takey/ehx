@@ -1,6 +1,6 @@
 import puppeteer from "puppeteer";
 import ProgressBar from "progress";
-import chalk from "chalk";
+import pc from "picocolors";
 
 import { readJSON, writeJSON, saveFile, getImageNum } from "./io";
 
@@ -64,7 +64,7 @@ const data = readJSON(key);
 
   const failures = data.pages.filter(({ done }) => !done);
   if (failures.length) {
-    console.log(chalk.red(`---- [${key}] End (some pages failed!) -----`));
+    console.log(pc.red(`---- [${key}] End (some pages failed!) -----`));
     failures.forEach(({ page, url }) => {
       console.log(`${page}: ${url}`);
     });
@@ -72,8 +72,8 @@ const data = readJSON(key);
   }
 
   if (getImageNum(key) === data.size) {
-    console.log(chalk.green(`---- [${key}] End (All pages completed!) -----`));
+    console.log(pc.green(`---- [${key}] End (All pages completed!) -----`));
   } else {
-    console.log(chalk.red(`---- [${key}] End (some pages failed!) -----`));
+    console.log(pc.red(`---- [${key}] End (some pages failed!) -----`));
   }
 })();
