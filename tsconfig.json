@@ -18,7 +18,7 @@
   },
   "compilerOptions": {
     // typescript options here
-    "target": "es2015",
+    "target": "esnext",
     "moduleResolution": "node",
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
