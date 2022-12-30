@@ -69,7 +69,7 @@ export const getImageNum = (key): number => {
 export const cropImage = async (filePath) => {
   const extension = filePath.split(".").pop();
 
-  const image = sharp(filePath);
+  const image = sharp(filePath, { failOnError: false });
   const { width, height } = await image.metadata();
   const regularWidth = Math.floor(height * 0.8)
   if (regularWidth > width) return;
