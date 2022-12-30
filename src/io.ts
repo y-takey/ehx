@@ -1,6 +1,5 @@
 import fs from "fs";
 import path from "path";
-import jsonStringify from "json-stringify-pretty-compact";
 import sharp from "sharp";
 
 import { DataJson } from "./interface"
@@ -35,7 +34,7 @@ export const writeJSON = (key: string, json: DataJson) => {
   const dirPath = `${baseDir}/${key}`;
   createDir(dirPath);
   const filePath = `${dirPath}/${catlogFileName}`;
-  fs.writeFileSync(filePath, jsonStringify(json));
+  fs.writeFileSync(filePath, JSON.stringify(json, null, 2));
 
   return filePath;
 };
