@@ -82,8 +82,8 @@ export const cropImage = async (filePath) => {
     const halfWidth = Math.floor(width / 2)
     const cropWidth = Math.min(halfWidth, regularWidth)
   
-    await image.extract({ ...extractOPtions, left: halfWidth, width: cropWidth }).toFile(`${filePath}.1.${extension}`);
-    await image.extract({ ...extractOPtions, left: halfWidth - cropWidth, width: cropWidth }).toFile(`${filePath}.2.${extension}`).then(removeFile);
+    await image.clone().extract({ ...extractOPtions, left: halfWidth, width: cropWidth }).toFile(`${filePath}.1.${extension}`);
+    await image.clone().extract({ ...extractOPtions, left: halfWidth - cropWidth, width: cropWidth }).toFile(`${filePath}.2.${extension}`).then(removeFile);
   } else {
     const left = Math.floor((width - regularWidth) / 2)
     await image.extract({ ...extractOPtions, left, width: regularWidth }).toFile(`${filePath}.1.${extension}`).then(removeFile);
