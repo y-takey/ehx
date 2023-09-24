@@ -1,7 +1,7 @@
-import puppeteer, { WaitForOptions } from "puppeteer";
 import pc from "picocolors";
 import yargs from "yargs/yargs";
 
+import { launch, gotoOptions } from "./puppeteer";
 import { existJSON, writeJSON } from "./io";
 import { PageRecord } from "./interface";
 
@@ -27,7 +27,6 @@ if (argv.p) {
 
 const PagenationSelector = ".gtb .ptt a";
 const ThumbnailSelector = ".gdtm a";
-const gotoOptions: WaitForOptions = { waitUntil: "domcontentloaded" };
 
 if (existJSON(key)) process.exit(0);
 
@@ -67,7 +66,7 @@ const getPagenations = async (page, query) => {
 const uniq = (ary: string[]) => Array.from(new Set(ary));
 
 (async () => {
-  const browser = await puppeteer.launch();
+  const browser = await launch();
   const page = await browser.newPage();
 
   try {

@@ -1,7 +1,7 @@
-import puppeteer from "puppeteer";
 import ProgressBar from "progress";
 import pc from "picocolors";
 
+import { launch } from "./puppeteer";
 import { readJSON, writeJSON, saveFile, getImageNum } from "./io";
 
 const [, , key] = process.argv;
@@ -12,7 +12,7 @@ const data = readJSON(key);
 
 (async () => {
   // console.log("---- [2] Start Downloading ---------------");
-  const browser = await puppeteer.launch();
+  const browser = await launch();
   const page = await browser.newPage();
   // page.setViewport({ width: 1280, height: 926 });
 
