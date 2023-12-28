@@ -31,6 +31,14 @@
     "yargs": "^17.7.2"
   },
   "devDependencies": {
-    "@types/yargs": "^17.0.32"
+    "@types/node": "^20.10.5",
+    "@types/yargs": "^17.0.32",
+    "devtools-protocol": "^0.0.1239539"
+  },
+  "packageManager": "yarn@4.0.2",
+  "dependenciesMeta": {
+    "puppeteer-core@21.6.1": {
+      "unplugged": true
+    }
   }
 }

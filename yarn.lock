@@ -302,7 +302,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:*":
+"@types/node@npm:*, @types/node@npm:^20.10.5":
   version: 20.10.5
   resolution: "@types/node@npm:20.10.5"
   dependencies:
@@ -617,6 +617,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"devtools-protocol@npm:^0.0.1239539":
+  version: 0.0.1239539
+  resolution: "devtools-protocol@npm:0.0.1239539"
+  checksum: f04b92d53c6cbaecfa98975ba6985fe8571357f64943b20d82a1c56f813ee6a2a0d471abb97eb7542d5885547eb1b3a2481c14c07e859f72a66d6425f3ba0826
+  languageName: node
+  linkType: hard
+
 "diff@npm:^4.0.1":
   version: 4.0.2
   resolution: "diff@npm:4.0.2"
@@ -628,7 +635,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "ehx@workspace:."
   dependencies:
+    "@types/node": "npm:^20.10.5"
     "@types/yargs": "npm:^17.0.32"
+    devtools-protocol: "npm:^0.0.1239539"
     picocolors: "npm:^1.0.0"
     progress: "npm:^2.0.3"
     puppeteer: "npm:^21.6.1"
@@ -636,6 +645,9 @@ __metadata:
     ts-node: "npm:^10.9.2"
     typescript: "npm:^5.3.3"
     yargs: "npm:^17.7.2"
+  dependenciesMeta:
+    puppeteer-core@21.6.1:
+      unplugged: true
   languageName: unknown
   linkType: soft
 
