@@ -61,3 +61,8 @@ typings/
 .next
 
 /tmp
+
+.yarn/*
+!.yarn/releases
+!.yarn/plugins
+.pnp.*
