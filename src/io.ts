@@ -1,4 +1,5 @@
 import fs from "fs";
+import fsPromises from "node:fs/promises";
 import path from "path";
 import sharp from "sharp";
 
@@ -75,8 +76,8 @@ export const cropImage = async filePath => {
 
   const extractOPtions = { top: 0, height: height };
   const removeFile = () => {
-    fs.unlink(filePath, () => {})
-  }
+    return fsPromises.rm(filePath);
+  };
 
   if (height * 1.2 < width) {
     const halfWidth = Math.floor(width / 2);
