@@ -5,6 +5,8 @@ import sharp from "sharp";
 
 import { DataJson } from "./interface";
 
+// Display: w=2,560 x h=1,600
+const maxHeight = 1600;
 const catlogFileName = "data.json";
 
 const baseDir = `${process.cwd()}/tmp`;
@@ -68,36 +70,37 @@ export const getImageNum = (key): number => {
 
 export const cropImage = async filePath => {
   const extension = filePath.split(".").pop();
+  const saveFile = async (sharpImage: sharp.Sharp, seq) => sharpImage.toFile(`${filePath}.${seq}.${extension}`);
+  const removeFile = async () => fsPromises.rm(filePath);
 
   const image = sharp(filePath, { failOnError: false });
   const { width, height } = await image.metadata();
   const regularWidth = Math.floor(height * 0.8);
-  if (regularWidth > width) return;
+  if (regularWidth > width) {
+    if (height <= maxHeight) return;
+    await saveFile(image.resize({ height: maxHeight }), 1);
+    await removeFile();
+    return;
+  }
 
-  const extractOPtions = { top: 0, height: height };
-  const removeFile = () => {
-    return fsPromises.rm(filePath);
+  const extract = (extractOPtions: Pick<sharp.Region, "left" | "width">): sharp.Sharp => {
+    const clonedImage = image.clone().extract({ top: 0, height: height, ...extractOPtions });
+
+    if (height <= maxHeight) return clonedImage;
+    return clonedImage.resize({ height: maxHeight });
   };
 
   if (height * 1.2 < width) {
     const halfWidth = Math.floor(width / 2);
     const cropWidth = Math.min(halfWidth, regularWidth);
 
-    await image
-      .clone()
-      .extract({ ...extractOPtions, left: halfWidth, width: cropWidth })
-      .toFile(`${filePath}.1.${extension}`);
-    await image
-      .clone()
-      .extract({ ...extractOPtions, left: halfWidth - cropWidth, width: cropWidth })
-      .toFile(`${filePath}.2.${extension}`)
-      .then(removeFile);
+    await saveFile(extract({ left: halfWidth, width: cropWidth }), 1);
+    await saveFile(extract({ left: halfWidth - cropWidth, width: cropWidth }), 2);
+    await removeFile();
   } else {
     const left = Math.floor((width - regularWidth) / 2);
-    await image
-      .extract({ ...extractOPtions, left, width: regularWidth })
-      .toFile(`${filePath}.1.${extension}`)
-      .then(removeFile);
+    await saveFile(extract({ left, width: regularWidth }), 1);
+    await removeFile();
   }
 };
 
