@@ -11,6 +11,13 @@ const sleep = msec => new Promise(resolve => setTimeout(resolve, msec));
 const data = readJSON(key);
 
 (async () => {
+  const startTime = new Date();
+  const showEndLog = (text: string) => {
+    const endTime = new Date();
+    const during = (endTime.getTime() - startTime.getTime()) / 1000;
+    console.log(`${text} ${startTime.toLocaleString()} - ${endTime.toLocaleTimeString()} (${Math.round(during)}s)`);
+  };
+
   // console.log("---- [2] Start Downloading ---------------");
   const browser = await launch();
   const page = await browser.newPage();
@@ -71,7 +78,7 @@ const data = readJSON(key);
 
   const failures = data.pages.filter(({ done }) => !done);
   if (failures.length) {
-    console.log(pc.red(`---- [${key}] End (some pages failed!) -----`));
+    showEndLog(pc.red(`---- [${key}] End (some pages failed!) -----`));
     failures.forEach(({ page, url }) => {
       console.log(`${page}: ${url}`);
     });
@@ -79,8 +86,8 @@ const data = readJSON(key);
   }
 
   if (getImageNum(key) === data.size) {
-    console.log(pc.green(`---- [${key}] End (All pages completed!) -----`));
+    showEndLog(pc.green(`---- [${key}] End (All pages completed!) -----`));
   } else {
-    console.log(pc.red(`---- [${key}] End (some pages failed!) -----`));
+    showEndLog(pc.red(`---- [${key}] End (some pages failed!) -----`));
   }
 })();
