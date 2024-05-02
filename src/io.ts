@@ -2,6 +2,7 @@ import fs from "fs";
 import fsPromises from "node:fs/promises";
 import path from "path";
 import sharp from "sharp";
+import pc from "picocolors";
 
 import { DataJson } from "./interface";
 
@@ -19,13 +20,17 @@ export const createDir = dirPath => {
   }
 };
 
-export const existJSON = key => {
+const existPath = filePath => {
   try {
-    fs.statSync(`${baseDir}/${key}/${catlogFileName}`);
+    fs.statSync(filePath);
     return true;
   } catch (err) {
     return false;
   }
+};
+
+export const existJSON = key => {
+  return existPath(`${baseDir}/${key}/${catlogFileName}`);
 };
 
 export const readJSON = (key: string): DataJson => {
@@ -112,4 +117,18 @@ export const getImagePaths = (dir: string) => {
     .map(filename => path.join(dir, filename));
 
   return filenames;
+};
+
+export const moveFiles = async (srcDir: string, dstDir: string) => {
+  const filePaths = getImagePaths(srcDir);
+
+  filePaths.forEach(srcPath => {
+    const dstPath = path.join(dstDir, path.basename(srcPath));
+
+    if (existPath(dstPath)) {
+      console.log(pc.red(`File existed: ${dstPath}`));
+    } else {
+      fs.renameSync(srcPath, dstPath);
+    }
+  });
 };
