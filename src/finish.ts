@@ -28,12 +28,9 @@ const rename = async () => {
 
   for (let srcPath of imagePaths) {
     const dstFile = path.join(dir, `${argv.n}_${String(++counter).padStart(5, "0")}.jpg`);
-    sharp(srcPath)
-      .jpeg({ quality: QUALITY })
-      .toFile(dstFile)
-      .then(() => {
-        fs.unlink(srcPath, () => {});
-      });
+    await sharp(srcPath).jpeg({ quality: QUALITY }).toFile(dstFile);
+
+    fs.unlinkSync(srcPath);
   }
 };
 
