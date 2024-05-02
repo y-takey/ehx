@@ -24,16 +24,16 @@
   "dependencies": {
     "picocolors": "^1.0.0",
     "progress": "^2.0.3",
-    "puppeteer": "^21.6.1",
-    "sharp": "^0.33.1",
+    "puppeteer": "^22.7.1",
+    "sharp": "^0.33.3",
     "ts-node": "^10.9.2",
-    "typescript": "^5.3.3",
+    "typescript": "^5.4.5",
     "yargs": "^17.7.2"
   },
   "devDependencies": {
-    "@types/node": "^20.10.5",
+    "@types/node": "^20.12.8",
     "@types/yargs": "^17.0.32",
-    "devtools-protocol": "^0.0.1239539"
+    "devtools-protocol": "^0.0.1294763"
   },
   "packageManager": "yarn@4.0.2",
   "dependenciesMeta": {
