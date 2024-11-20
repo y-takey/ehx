@@ -25,7 +25,7 @@ const data = readJSON(key);
   // page.setViewport({ width: 1280, height: 926 });
 
   const targets = data.pages;
-  const bar = new ProgressBar("downloading [:bar] :current/:total (:percent) :etas", {
+  const bar = new ProgressBar(`downloading [:bar] ${key} :current/:total (:percent) :etas`, {
     incomplete: " ",
     total: targets.length,
     width: 30,
@@ -86,10 +86,10 @@ const data = readJSON(key);
 
   const failures = data.pages.filter(({ done }) => !done);
   if (failures.length) {
-    showEndLog(pc.red(`---- [${key}] End (some pages failed!) -----`));
-    failures.forEach(({ page, url }) => {
+    failures.slice(0, 5).forEach(({ page, url }) => {
       console.log(`${page}: ${url}`);
     });
+    showEndLog(pc.red(`---- [${key}] End (${failures.length} pages failed!) -----`));
     return;
   }
 
