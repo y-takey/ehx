@@ -93,7 +93,7 @@ const uniq = (ary: string[]) => Array.from(new Set(ary));
       process.exit(1);
     }
 
-    const tempPages: PageRecord[] = urls.map((url, i) => ({ page: i + 1, ...url, done: false, times: 1 }));
+    const tempPages: PageRecord[] = urls.map((url, i) => ({ page: i + 1, ...url, done: false, times: 0 }));
     const pages = isFiltered ? tempPages.filter(rec => targetPages[rec.page]) : tempPages;
     const jsonPath = writeJSON(key, { title, size: pages.length, pages: pages });
 

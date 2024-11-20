@@ -33,6 +33,7 @@ const data = readJSON(key);
 
   for (const record of targets) {
     if (!record.done) {
+      record.times = record.times + 1;
       try {
         const responseListener = async response => {
           try {
@@ -65,7 +66,6 @@ const data = readJSON(key);
         await sleep(1000);
         page.off("response", responseListener);
 
-        record.times = record.times + 1;
         if (response.status() === 200) {
           record.done = true;
         }
