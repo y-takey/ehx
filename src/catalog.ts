@@ -26,7 +26,7 @@ if (argv.p) {
 }
 
 const PagenationSelector = ".gtb .ptt a";
-const ThumbnailSelector = ".gdtm a";
+const ThumbnailSelector = "#gdt a";
 
 if (existJSON(key)) process.exit(0);
 
@@ -40,7 +40,7 @@ const getHrefs = async (page, query): Promise<Refs[]> =>
   await page.evaluate(selector => {
     const links = document.querySelectorAll(selector);
     return [...links].map(link => {
-      const [, filename] = link.querySelector("img").title.split(": ");
+      const [, filename] = link.querySelector("div").title.split(": ");
       return { url: link.href, filename };
     });
   }, query);
