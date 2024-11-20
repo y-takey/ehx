@@ -12,6 +12,8 @@ const catlogFileName = "data.json";
 
 const baseDir = `${process.cwd()}/tmp`;
 
+export const imageExt = `\.(jpg|jpeg|png|webp)$`;
+
 let existsImageDir = false;
 
 export const createDir = dirPath => {
@@ -112,7 +114,7 @@ export const cropImage = async filePath => {
 export const getImagePaths = (dir: string) => {
   const filenames = fs
     .readdirSync(dir)
-    .filter(filename => filename.match(/\.(jpg|jpeg|png)$/))
+    .filter(filename => filename.match(new RegExp(imageExt)))
     .sort()
     .map(filename => path.join(dir, filename));
 

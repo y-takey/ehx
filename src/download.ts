@@ -2,7 +2,7 @@ import ProgressBar from "progress";
 import pc from "picocolors";
 
 import { launch } from "./puppeteer";
-import { readJSON, writeJSON, saveFile, getImageNum } from "./io";
+import { readJSON, writeJSON, saveFile, getImageNum, imageExt } from "./io";
 
 const [, , key] = process.argv;
 
@@ -39,12 +39,13 @@ const data = readJSON(key);
               const funnyFileMatch = /.+\/([^\/]{1,}\-jpg)$/.exec(url);
               if (funnyFileMatch) return funnyFileMatch[1] + ".jpg";
 
-              const matches = /.+\/([^\/]{1,}\.(jpg|png))$/.exec(response.url());
+              const matches = new RegExp(`.+\/([^\/]{1,}${imageExt})`).exec(response.url());
               if (!matches) return null;
               const filename = matches[1];
 
               // タイトルと実際の拡張子が異なる場合があるため、拡張子は無視する
-              if (filename.replace(/\.(jpg|png)$/, "") !== record.filename.replace(/\.(jpg|png)$/, "")) return null;
+              const withoutExt = (name: string) => name.replace(new RegExp(imageExt), "");
+              if (withoutExt(filename) !== withoutExt(record.filename)) return null;
               return filename;
             };
             const filename = getFilename(response.url());
