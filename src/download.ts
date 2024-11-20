@@ -2,7 +2,7 @@ import ProgressBar from "progress";
 import pc from "picocolors";
 
 import { launch } from "./puppeteer";
-import { readJSON, writeJSON, saveFile, getImageNum, imageExt } from "./io";
+import { readJSON, writeJSON, saveFile, getImageNum, imageExt, getImageFileNames } from "./io";
 
 const timeoutMS = 2 * 1000;
 const [, , key] = process.argv;
@@ -74,6 +74,11 @@ const data = readJSON(key);
       }
     }
     bar.tick();
+  }
+
+  const existPages = Object.fromEntries(getImageFileNames(key).map(filename => [Number(filename.slice(0, 3)), true]));
+  for (const record of targets) {
+    record.done = !!existPages[record.page];
   }
 
   writeJSON(key, data);

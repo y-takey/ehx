@@ -75,6 +75,12 @@ export const getImageNum = (key): number => {
   return ret.length;
 };
 
+export const getImageFileNames = (key): string[] => {
+  const dirPath = imageDirPath(key);
+  const filePaths = fs.readdirSync(dirPath);
+  return filePaths.map(filePath => path.basename(filePath));
+};
+
 export const cropImage = async filePath => {
   const extension = filePath.split(".").pop();
   const saveFile = async (sharpImage: sharp.Sharp, seq) => sharpImage.toFile(`${filePath}.${seq}.${extension}`);
