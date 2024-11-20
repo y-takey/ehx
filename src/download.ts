@@ -4,7 +4,7 @@ import pc from "picocolors";
 import { launch } from "./puppeteer";
 import { readJSON, writeJSON, saveFile, getImageNum, imageExt } from "./io";
 
-const timeoutMS = 4 * 1000;
+const timeoutMS = 2 * 1000;
 const [, , key] = process.argv;
 
 const sleep = msec => new Promise(resolve => setTimeout(resolve, msec));
@@ -61,10 +61,11 @@ const data = readJSON(key);
         // `{ waitUntil: "networkidle0" }` だと画像の保存が完了する前に終了することがあるため、
         // 完全にアイドル状態になるまで待機する。もしそれでも取りこぼしが発生する場合は、
         // "domcontentloaded" や "load" を試してみる。
-        const response = await page.goto(record.url, { timeout: timeoutMS, waitUntil: "networkidle0" });
+        const response = await page.goto(record.url, { timeout: timeoutMS * record.times, waitUntil: "networkidle0" });
         await sleep(1000);
         page.off("response", responseListener);
 
+        record.times = record.times + 1;
         if (response.status() === 200) {
           record.done = true;
         }

@@ -3,6 +3,7 @@ export interface PageRecord {
   url: string;
   filename: string;
   done: boolean;
+  times: number;
 }
 
 export interface DataJson {
