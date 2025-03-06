@@ -4,7 +4,7 @@ import pc from "picocolors";
 import { launch } from "./puppeteer";
 import { readJSON, writeJSON, saveFile, getImageNum, imageExt, getImageFileNames } from "./io";
 
-const timeoutMS = 2 * 1000;
+const timeoutMS = 4 * 1000;
 const [, , key] = process.argv;
 
 const sleep = msec => new Promise(resolve => setTimeout(resolve, msec));
