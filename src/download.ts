@@ -1,5 +1,6 @@
 import ProgressBar from "progress";
 import pc from "picocolors";
+import { HTTPResponse } from "puppeteer";
 
 import { launch } from "./puppeteer";
 import { readJSON, writeJSON, saveFile, getImageNum, imageExt, getImageFileNames } from "./io";
@@ -35,13 +36,13 @@ const data = readJSON(key);
     if (!record.done) {
       record.times = record.times + 1;
       try {
-        const responseListener = async response => {
+        const responseListener = async (response: HTTPResponse) => {
           try {
             const getFilename = (url: string) => {
               const funnyFileMatch = /.+\/([^\/]{1,}\-jpg)$/.exec(url);
               if (funnyFileMatch) return funnyFileMatch[1] + ".jpg";
 
-              const matches = new RegExp(`.+\/([^\/]{1,}${imageExt})`).exec(response.url());
+              const matches = new RegExp(`.+\/([^\/]{1,}${imageExt})`).exec(url);
               if (!matches) return null;
               const filename = matches[1];
 
