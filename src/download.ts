@@ -12,6 +12,39 @@ const sleep = msec => new Promise(resolve => setTimeout(resolve, msec));
 
 const data = readJSON(key);
 
+const withoutExt = (name: string) => name.replace(new RegExp(imageExt), "");
+
+const getTargetFilename = (response: HTTPResponse, expectedFilename: string): string | null => {
+  const url = response.url();
+  if (url.includes("ads.")) return null;
+  const headers = response.headers();
+  const contentType = headers["content-type"];
+  if (!contentType?.startsWith("image/")) return null;
+  const actualFilename = url.split("/").at(-1);
+  const actualFilenamePartial = withoutExt(actualFilename);
+  const expectedFilenamePartial = withoutExt(expectedFilename);
+
+  if (!actualFilenamePartial) return actualFilename;
+
+  if (actualFilenamePartial === expectedFilenamePartial) return actualFilename;
+
+  // const length = Number(headers["content-length"]);
+  // if (length < 10000) return null;
+
+  return null;
+};
+
+const createResponseListener = (page: number, filename: string) => async (response: HTTPResponse) => {
+  try {
+    const targetFilename = getTargetFilename(response, filename);
+    if (!targetFilename) return;
+
+    const buffer = await response.buffer();
+
+    await saveFile(key, `${page.toString().padStart(3, "0")}_${targetFilename}`, buffer);
+  } catch (e) {}
+};
+
 (async () => {
   const startTime = new Date();
   const showEndLog = (text: string) => {
@@ -36,28 +69,7 @@ const data = readJSON(key);
     if (!record.done) {
       record.times = record.times + 1;
       try {
-        const responseListener = async (response: HTTPResponse) => {
-          try {
-            const getFilename = (url: string) => {
-              const funnyFileMatch = /.+\/([^\/]{1,}\-jpg)$/.exec(url);
-              if (funnyFileMatch) return funnyFileMatch[1] + ".jpg";
-
-              const matches = new RegExp(`.+\/([^\/]{1,}${imageExt})`).exec(url);
-              if (!matches) return null;
-              const filename = matches[1];
-
-              // タイトルと実際の拡張子が異なる場合があるため、拡張子は無視する
-              const withoutExt = (name: string) => name.replace(new RegExp(imageExt), "");
-              if (withoutExt(filename) !== withoutExt(record.filename)) return null;
-              return filename;
-            };
-            const filename = getFilename(response.url());
-            if (!filename) return;
-
-            const buffer = await response.buffer();
-            await saveFile(key, `${record.page.toString().padStart(3, "0")}_${filename}`, buffer);
-          } catch (e) {}
-        };
+        const responseListener = createResponseListener(record.page, record.filename);
         page.on("response", responseListener);
 
         // `{ waitUntil: "networkidle0" }` だと画像の保存が完了する前に終了することがあるため、
