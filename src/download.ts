@@ -5,6 +5,7 @@ import { HTTPResponse } from "puppeteer";
 import { launch } from "./puppeteer";
 import { readJSON, writeJSON, saveFile, getImageNum, imageExt, getImageFileNames } from "./io";
 
+const pageDigits = 4;
 const timeoutMS = 4 * 1000;
 const [, , key] = process.argv;
 
@@ -41,7 +42,7 @@ const createResponseListener = (page: number, filename: string) => async (respon
 
     const buffer = await response.buffer();
 
-    await saveFile(key, `${page.toString().padStart(3, "0")}_${targetFilename}`, buffer);
+    await saveFile(key, `${page.toString().padStart(pageDigits, "0")}_${targetFilename}`, buffer);
   } catch (e) {}
 };
 
@@ -89,7 +90,9 @@ const createResponseListener = (page: number, filename: string) => async (respon
     bar.tick();
   }
 
-  const existPages = Object.fromEntries(getImageFileNames(key).map(filename => [Number(filename.slice(0, 3)), true]));
+  const existPages = Object.fromEntries(
+    getImageFileNames(key).map(filename => [Number(filename.slice(0, pageDigits)), true]),
+  );
   for (const record of targets) {
     record.done = !!existPages[record.page];
   }
