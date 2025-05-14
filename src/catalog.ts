@@ -10,20 +10,33 @@ const argv = yargs(process.argv.slice(2))
   .parseSync();
 const [key, targetUrl] = argv._ as string[];
 const isFiltered = argv.p;
-const targetPages = {};
 
-if (argv.p) {
+const getTargetPages = (maxPage: number) => {
+  const result = {};
+  if (!argv.p) return result;
+
   argv.p.split(",").forEach(str => {
-    const [startNum, endNum, stepNum] = str.split("-").map(Number);
-    if (endNum) {
-      for (let num = startNum; num <= endNum; num = num + (stepNum || 1)) {
-        targetPages[num] = true;
-      }
+    const nums = str.split("-").map(Number);
+    const startNum = nums[0] || 1;
+    if (nums.length === 1) {
+      result[startNum] = true;
     } else {
-      targetPages[startNum] = true;
+      const endNum = nums[1] || maxPage;
+      const stepNum = nums[2] || 1;
+      for (let num = startNum; num <= endNum; num = num + stepNum) {
+        result[num] = true;
+      }
     }
   });
-}
+  return result;
+};
+
+const filterPages = (allPages: PageRecord[]) => {
+  if (!isFiltered) return allPages;
+  const targetPages = getTargetPages(allPages.length);
+
+  return allPages.filter(rec => targetPages[rec.page]);
+};
 
 const PagenationSelector = ".gtb .ptt a";
 const ThumbnailSelector = "#gdt a";
@@ -94,7 +107,7 @@ const uniq = (ary: string[]) => Array.from(new Set(ary));
     }
 
     const tempPages: PageRecord[] = urls.map((url, i) => ({ page: i + 1, ...url, done: false, times: 0 }));
-    const pages = isFiltered ? tempPages.filter(rec => targetPages[rec.page]) : tempPages;
+    const pages = filterPages(tempPages);
     const jsonPath = writeJSON(key, { title, size: pages.length, pages: pages });
 
     console.log("[OUT] ", jsonPath);
