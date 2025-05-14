@@ -81,7 +81,7 @@ const uniq = (ary: string[]) => Array.from(new Set(ary));
     const urls = [];
     for (const indexPage of pagenations) {
       if (indexPage !== targetUrl) {
-        await page.goto(indexPage, gotoOptions);
+        await page.goto(indexPage, { timeout: 20000, ...gotoOptions });
       }
 
       urls.push(...(await getHrefs(page, ThumbnailSelector)));
