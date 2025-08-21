@@ -83,7 +83,7 @@ const uniq = (ary: string[]) => Array.from(new Set(ary));
   const page = await browser.newPage();
 
   try {
-    await page.goto(`${targetUrl}?nw=always`, gotoOptions);
+    await page.goto(`${targetUrl}?nw=always`, { timeout: 40000, ...gotoOptions });
 
     const title = await page.evaluate(() => (document.getElementById("gj").innerText || document.title).trim());
 
@@ -94,7 +94,7 @@ const uniq = (ary: string[]) => Array.from(new Set(ary));
     const urls = [];
     for (const indexPage of pagenations) {
       if (indexPage !== targetUrl) {
-        await page.goto(indexPage, { timeout: 40000, ...gotoOptions });
+        await page.goto(indexPage, { timeout: 60000, ...gotoOptions });
       }
 
       urls.push(...(await getHrefs(page, ThumbnailSelector)));
