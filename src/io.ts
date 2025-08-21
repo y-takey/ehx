@@ -127,6 +127,15 @@ export const getImagePaths = (dir: string) => {
   return filenames;
 };
 
+export const resolveDistPath = (targetPath: string): string => {
+  const distDir = process.env.DIST_DIR;
+  if (!distDir) return targetPath;
+
+  if (targetPath.startsWith(distDir)) return targetPath;
+
+  return path.join(distDir, targetPath);
+};
+
 export const moveFiles = async (srcDir: string, dstDir: string) => {
   const filePaths = getImagePaths(srcDir);
 

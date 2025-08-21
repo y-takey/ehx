@@ -4,12 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "ts-node src/index.ts",
-    "catalog": "ts-node src/catalog.ts",
-    "fin": "ts-node src/finish.ts",
-    "crop": "ts-node src/crop.ts",
-    "dl": "ts-node src/download.ts",
-    "download": "ts-node src/download.ts"
+    "base": "node --env-file=.env -r ts-node/register",
+    "start": "yarn base src/index.ts",
+    "catalog": "yarn base src/catalog.ts",
+    "fin": "yarn base src/finish.ts",
+    "crop": "yarn base src/crop.ts",
+    "dl": "yarn base src/download.ts",
+    "download": "yarn base src/download.ts"
   },
   "repository": {
     "type": "git",

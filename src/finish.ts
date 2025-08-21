@@ -4,7 +4,7 @@ import sharp from "sharp";
 import yargs from "yargs/yargs";
 import pc from "picocolors";
 
-import { imageDirPath, getImagePaths, cropImage, moveFiles } from "./io";
+import { imageDirPath, getImagePaths, cropImage, moveFiles, createDir, resolveDistPath } from "./io";
 
 const QUALITY = 50;
 
@@ -39,7 +39,12 @@ const main = async () => {
   await rename();
 
   if (argv.d) {
-    await moveFiles(dir, argv.d);
+    const distDir = resolveDistPath(argv.d);
+    if (distDir !== argv.d) {
+      createDir(distDir);
+    }
+
+    await moveFiles(dir, distDir);
   }
 
   console.log(pc.green(`---- [${key}] Completed -----`));
