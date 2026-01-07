@@ -23,18 +23,18 @@
   },
   "homepage": "https://github.com/y-takey/ehx#readme",
   "dependencies": {
-    "picocolors": "^1.0.1",
+    "picocolors": "^1.1.1",
     "progress": "^2.0.3",
-    "puppeteer": "^22.10.1",
-    "sharp": "^0.33.4",
+    "puppeteer": "^24.34.0",
+    "sharp": "^0.34.5",
     "ts-node": "^10.9.2",
-    "typescript": "^5.4.5",
-    "yargs": "^17.7.2"
+    "typescript": "^5.9.3",
+    "yargs": "^18.0.0"
   },
   "devDependencies": {
-    "@types/node": "^20.14.2",
-    "@types/yargs": "^17.0.32",
-    "devtools-protocol": "^0.0.1312386"
+    "@types/node": "^25.0.3",
+    "@types/yargs": "^17.0.35",
+    "devtools-protocol": "^0.0.1565416"
   },
   "dependenciesMeta": {
     "puppeteer-core@21.6.1": {
