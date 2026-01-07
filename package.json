@@ -36,10 +36,10 @@
     "@types/yargs": "^17.0.32",
     "devtools-protocol": "^0.0.1312386"
   },
-  "packageManager": "yarn@4.9.3",
   "dependenciesMeta": {
     "puppeteer-core@21.6.1": {
       "unplugged": true
     }
-  }
+  },
+  "packageManager": "yarn@4.12.0"
 }
