@@ -86,6 +86,7 @@ const createResponseListener = (page: number, filename: string) => async (respon
       } catch (err) {
         // 当該のページのダウンロードはスキップし、次のページのダウンロードを継続する。
       }
+      writeJSON(key, data);
     }
     bar.tick();
   }
