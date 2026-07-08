@@ -6,7 +6,7 @@ import { launch } from "./puppeteer";
 import { readJSON, writeJSON, saveFile, getImageNum, imageExt, getImageFileNames } from "./io";
 
 const pageDigits = 4;
-const timeoutMS = 4 * 1000;
+const timeoutMS = 40 * 1000;
 const [, , key] = process.argv;
 
 const sleep = msec => new Promise(resolve => setTimeout(resolve, msec));
@@ -79,6 +79,7 @@ const createResponseListener = (page: number, filename: string) => async (respon
         const response = await page.goto(record.url, { timeout: timeoutMS * record.times, waitUntil: "networkidle0" });
         await sleep(1000);
         page.off("response", responseListener);
+        // await page.close();
 
         if (response.status() === 200) {
           record.done = true;
