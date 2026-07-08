@@ -1,0 +1,27 @@
+[tools]
+bun = "latest"
+
+[env]
+EHX_WORK_DIR="./tmp"
+EHX_DIST_DIR=""
+
+[settings]
+quiet = true
+
+[vars]
+cli = "bun run bin/cli.ts"
+
+[tasks.scrape]
+run = "{{vars.cli}} scrape"
+
+[tasks.fin]
+run = "{{vars.cli}} fin"
+
+[tasks.video-compress]
+run = "{{vars.cli}} video-compress"
+
+[tasks.video-trim]
+run = "{{vars.cli}} video-trim"
+
+# [shell_alias]
+# hoge = "bun run bin/cli.ts "

@@ -1,45 +1,18 @@
 {
   "name": "ehx",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "base": "node --env-file=.env -r ts-node/register",
-    "start": "yarn base src/index.ts",
-    "catalog": "yarn base src/catalog.ts",
-    "fin": "yarn base src/finish.ts",
-    "crop": "yarn base src/crop.ts",
-    "dl": "yarn base src/download.ts",
-    "download": "yarn base src/download.ts"
+  "type": "module",
+  "bin": {
+    "img-scraper": "./bin/cli.ts"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/y-takey/ehx.git"
-  },
-  "author": "y-takey",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/y-takey/ehx/issues"
-  },
-  "homepage": "https://github.com/y-takey/ehx#readme",
   "dependencies": {
+    "cheerio": "^1.0.0",
+    "commander": "^15.0.0",
     "picocolors": "^1.1.1",
-    "progress": "^2.0.3",
-    "puppeteer": "^24.34.0",
-    "sharp": "^0.34.5",
-    "ts-node": "^10.9.2",
-    "typescript": "^5.9.3",
-    "yargs": "^18.0.0"
+    "sharp": "^0.35.2"
   },
   "devDependencies": {
-    "@types/node": "^25.0.3",
-    "@types/yargs": "^17.0.35",
-    "devtools-protocol": "^0.0.1565416"
-  },
-  "dependenciesMeta": {
-    "puppeteer-core@21.6.1": {
-      "unplugged": true
-    }
-  },
-  "packageManager": "yarn@4.12.0"
+    "@types/bun": "^1.3.14",
+    "@types/node": "^25.9.2"
+  }
 }
